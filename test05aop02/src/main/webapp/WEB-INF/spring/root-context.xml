@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-		
+	<!-- 
+		서순
+		1. target 객체 설정(반드시 인터페이스를 상속받은 클래스여야함)
+		2. Advice 설정(언제, 무슨 공통기능을 수행할것인지)
+		3. PointCut 설정(advice가 적용될 지점 - 특정 메소드에 적용)
+		4. Advisor 설정(Advice + PointCut)
+		5. ProxyBean 객체 설정(target + Advisor) 
+	 -->
+	 
+	 <!-- 1 -->
+	<bean id="dao" class="test.com.aop02.TestDAOimpl"></bean>
+	
+	<!-- 2 -->
+	<bean id="testMI" class="test.com.aop02.TestMethodInterceptorImpl"></bean>
+	
+	<!-- 3, 4, 5 -->
+	<aop:config>
+		<aop:pointcut 
+			expression="execution(public * test..*DAO*.*(..))" 
+			id="testPointCut"></aop:pointcut>
+		<aop:advisor advice-ref="testMI" pointcut-ref="testPointCut" />		
+	</aop:config>
+	
+	<!-- 5는 pom에 추가한 weaver가 알아서 처리해줌 -->
 </beans>
